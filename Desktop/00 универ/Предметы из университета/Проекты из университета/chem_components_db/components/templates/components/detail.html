@@ -1,0 +1,61 @@
+{% extends "components/base.html" %}
+
+{% block title %}{{ component.name }} — карточка компонента{% endblock %}
+
+{% block content %}
+<a class="back-link" href="{% url 'list' %}">&laquo; К списку компонентов</a>
+
+<div class="card">
+    <h2>{{ component.name }}</h2>
+    <table>
+        <tr><th>Формула</th><td>{{ component.formula|default:"—" }}</td></tr>
+        <tr><th>CAS-номер</th><td>{{ component.cas_number|default:"—" }}</td></tr>
+        <tr><th>Молярная масса</th><td>{{ component.molar_mass|default:"—" }} г/моль</td></tr>
+        <tr><th>Класс вещества</th><td>{{ component.substance_class|default:"—" }}</td></tr>
+        <tr><th>Т кипения (норм.)</th><td>{{ component.normal_boiling_point|default:"—" }}</td></tr>
+        <tr><th>Критическая температура</th><td>{{ component.critical_temperature|default:"—" }}</td></tr>
+        <tr><th>Критическое давление</th><td>{{ component.critical_pressure|default:"—" }}</td></tr>
+        <tr><th>Ацентрический фактор</th><td>{{ component.acentric_factor|default:"—" }}</td></tr>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Синонимы / альтернативные названия</h3>
+    {% if component.aliases.all %}
+    <table>
+        <thead><tr><th>Название</th><th>Тип</th></tr></thead>
+        <tbody>
+        {% for alias in component.aliases.all %}
+            <tr><td>{{ alias.alias_name }}</td><td>{{ alias.get_alias_type_display }}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="muted">Синонимы не указаны.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h3>Свойства</h3>
+    {% if component.properties.all %}
+    <table>
+        <thead>
+            <tr><th>Свойство</th><th>Значение</th><th>Единица</th><th>Условия</th><th>Источник</th></tr>
+        </thead>
+        <tbody>
+        {% for prop in component.properties.all %}
+            <tr>
+                <td>{{ prop.property_name }}</td>
+                <td>{{ prop.value }}</td>
+                <td>{{ prop.unit|default:"—" }}</td>
+                <td>{{ prop.conditions|default:"—" }}</td>
+                <td>{{ prop.source|default:"—" }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="muted">Свойства не заданы.</p>
+    {% endif %}
+</div>
+{% endblock %}
